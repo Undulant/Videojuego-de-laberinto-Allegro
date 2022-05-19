@@ -1,0 +1,160 @@
+#include <iostream>
+#include <allegro.h>
+
+using namespace std;
+
+    BITMAP *buffer;
+    BITMAP *roca;
+    BITMAP *necobmp;
+    BITMAP *neco;
+    BITMAP *limon;
+    BITMAP *Menu;
+    BITMAP *MenuC;
+    BITMAP *MenuS;
+    BITMAP *cursor;
+
+    int dir=0;
+    int px=30, py=30;
+
+    int mapa1[19][30] = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+                         1,0,0,1,0,0,0,0,1,1,0,0,0,0,1,0,0,1,0,0,0,1,0,1,0,0,0,0,1,1,
+                         1,1,0,1,0,0,1,0,0,0,0,0,1,0,1,0,0,0,0,0,0,1,0,1,1,1,1,0,1,1,
+                         1,1,0,0,0,0,1,0,1,1,1,0,1,0,1,1,0,1,1,1,0,1,0,0,0,0,0,0,1,1,
+                         1,1,1,0,1,0,1,0,0,0,1,0,1,0,0,0,0,1,1,1,0,1,0,1,1,0,1,0,1,1,
+                         1,1,0,0,1,0,0,0,1,0,1,0,1,1,1,0,0,1,0,0,0,0,0,1,0,0,1,0,1,1,
+                         1,1,0,1,1,0,1,0,0,0,1,0,1,0,1,0,1,1,1,1,1,1,0,1,0,0,1,0,1,1,
+                         1,1,0,0,1,0,1,0,1,0,0,0,1,0,1,0,0,1,0,0,0,0,0,1,0,0,1,0,1,1,
+                         1,1,1,0,1,0,1,0,1,1,0,1,1,0,1,1,1,1,0,1,1,1,1,1,1,0,1,0,1,1,
+                         1,1,1,0,0,0,0,0,0,1,0,1,0,0,1,0,0,1,0,0,0,1,0,1,0,0,1,0,1,1,
+                         1,1,1,1,0,1,0,1,1,1,1,1,0,0,1,1,0,1,1,1,1,1,0,0,0,1,0,0,1,1,
+                         1,1,0,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,0,1,0,1,0,1,1,1,1,1,
+                         1,1,0,0,0,1,0,1,0,1,0,0,1,0,1,0,0,1,0,1,0,0,0,1,0,0,0,0,1,1,
+                         1,1,0,1,0,1,0,1,0,0,0,1,1,0,1,0,1,1,0,1,1,1,1,1,1,1,1,0,1,1,
+                         1,1,0,0,0,0,0,1,0,1,0,0,0,0,1,0,0,1,0,0,1,0,0,0,1,0,1,0,1,1,
+                         1,1,0,1,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,1,0,2,0,
+                         1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+    };
+
+    void dibujar_mapa1(){
+    for (int row = 0; row < 19; row++){
+        for (int col = 0; col < 30; col++){
+            if(mapa1 [row][col]== 1){
+                draw_sprite(buffer, roca, col*30, row*30);
+            }
+            if(mapa1 [row][col] == 2){
+                draw_sprite(buffer, limon, col*30, row*30);
+                if(py/30 == row && px/30 == col){
+                    mapa1[row][col] = ' ';
+                }
+            }
+        }
+    }
+    }
+
+    void pantalla(){
+    blit(buffer, screen, 0,0,0,0, 900, 600);
+    }
+    void dibujar_personaje(){
+    blit(necobmp,neco, 0,0,0,0, 30, 30);
+    draw_sprite(buffer,neco, px,py); //Estrablece el respawn
+    }
+    bool level_over(){
+        for (int row = 0; row < 19; row++){
+                for (int col = 0; col < 30; col++){
+                    if(mapa1 [row][col] == 2) return true;
+                }
+        }
+        return false;
+    }
+
+
+int main()
+{
+    allegro_init(); //Inicializa el entorno de allegro
+    install_keyboard(); //Permite el uso de teclas dentro del programa
+    install_mouse(); //Permite el uso del cursor
+    set_color_depth(32); //Establece el formato en 32 bits
+    set_gfx_mode(GFX_AUTODETECT_WINDOWED, 900, 600, 0, 0); //Define el tamaño de la pantalla del juego
+
+    buffer = create_bitmap(900,600); //Permite pegar la estampa principal y armar el esecenario del juego
+    roca = load_bitmap("roca.bmp",NULL);
+    necobmp = load_bitmap("neco.bmp",NULL);
+    neco = create_bitmap(30,30);
+    limon = load_bitmap("limon.bmp",NULL);
+    Menu = load_bitmap("Menu.bmp",NULL);
+    MenuC = load_bitmap("MenuC.bmp",NULL);
+    MenuS = load_bitmap("MenuS.bmp",NULL);
+    cursor = load_bitmap("cursor.bmp",NULL);
+
+    bool salida = false;//menu
+
+    while(!salida){
+            if(mouse_x > 250 && mouse_x < 490 && mouse_y > 290 && mouse_y < 355){
+                blit(MenuC,buffer, 0,0,0,0, 900, 600);
+                if(mouse_b & 1){
+                    salida = true;
+                }
+            }
+            else if(mouse_x > 250 && mouse_x < 380 && mouse_y > 405 && mouse_y < 455){
+                    blit(MenuS,buffer,0,0,0,0, 900, 600);
+                if(mouse_b & 1){
+                    salida = false;
+                }
+            }
+            else blit(Menu,buffer,0,0,0,0, 900, 600);
+
+            masked_blit(cursor,buffer,0,0,mouse_x,mouse_y,15,22);
+            blit(buffer,screen,0,0,0,0, 900, 600);
+    }
+
+    while(!key[KEY_ESC] && level_over()) //Sistema de cerrado del juego
+    {
+
+        if(key[KEY_RIGHT]) dir = 1;{
+                if (dir == 1){
+                        if(mapa1[py/30][(px+30)/30]!= 1)
+                        px +=30;
+                        else dir = 5;
+                        }
+                dir=4;
+        }
+
+        if(key[KEY_LEFT]) dir = 0;{
+                if (dir == 0){
+                        if(mapa1[py/30][(px-30)/30]!= 1)
+                        px -=30;
+                        else dir = 5;
+                        }
+                dir=4;
+        }
+
+        if(key[KEY_UP]) dir = 2;{
+            if (dir == 2){
+                if(mapa1[(py-30)/30][px/30]!= 1)
+                py -=30;
+                else dir = 5;
+        }
+            dir=4;
+        }
+
+        if(key[KEY_DOWN]) dir = 3;{
+            if (dir == 3){
+                    if(mapa1[(py+30)/30][px/30]!= 1)
+                    py +=30;
+                    else dir = 5;
+        }
+            dir=4;
+        }
+
+
+        clear(buffer);
+        dibujar_mapa1();
+        dibujar_personaje();
+        pantalla();
+        rest(90);
+
+
+    }
+    return 0;
+}
+END_OF_MAIN();
