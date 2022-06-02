@@ -1,0 +1,818 @@
+#include <iostream>
+#include <allegro.h>
+#include <stdlib.h>
+
+using namespace std;
+
+    BITMAP *buffer;
+    BITMAP *roca;
+    BITMAP *necobmp;
+    BITMAP *neco;
+    BITMAP *limon;
+    BITMAP *Menu;
+    BITMAP *MenuC;
+    BITMAP *MenuS;
+    BITMAP *cursor;
+    BITMAP *MenuCre;
+    BITMAP *Creditos;
+    BITMAP *CreditosA;
+    SAMPLE *MusicaMenu;
+    SAMPLE *MusicaJuego;
+    SAMPLE *comer;
+    BITMAP *neco20;
+    BITMAP *roca20;
+    BITMAP *limon20;
+    BITMAP *Inst;
+    BITMAP *InstJ;
+    BITMAP *suelo;
+    BITMAP *suelo20;
+    BITMAP *N1M1;
+    BITMAP *N2M1;
+    BITMAP *N3M1;
+    BITMAP *N4M1;
+    BITMAP *N0M0;
+    BITMAP *lava;
+    BITMAP *FMP1;
+    BITMAP *FMP2;
+    BITMAP *FMP3;
+    BITMAP *cuckzi;
+    BITMAP *FBP1;
+    BITMAP *FBP2;
+    BITMAP *FBP3;
+    SAMPLE *Boss;
+    SAMPLE *CFB;
+    SAMPLE *CFM;
+    SAMPLE *Tramp;
+
+    int dir=0;
+    int x=0, y=0;
+    int px=30, py=30;
+    int pxn2=30, pyn2=480;
+    int px2=20, py2=20;
+    int px4=20, py4=20;
+    int numero_de_nivel = 1;
+    int N1X = 0, N1Y = 540;
+    int avanzar_pagina = 1;
+    int fin = 0;
+
+
+    int mapa1[18][30] = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+                         1,0,1,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,1,1,
+                         1,0,1,0,1,0,1,1,1,1,0,0,1,1,1,0,1,1,1,1,1,1,1,0,1,1,1,0,0,1,
+                         1,0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,
+                         1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,1,1,
+                         1,0,0,0,0,1,0,0,1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,1,0,0,1,0,1,1,
+                         1,0,1,1,0,1,0,1,1,0,1,1,1,0,1,0,1,0,1,1,0,1,1,1,1,0,0,0,0,1,
+                         1,0,1,2,0,1,0,1,0,0,1,0,1,0,0,0,1,0,0,0,0,1,0,1,0,0,1,0,1,1,
+                         1,0,1,1,1,1,0,0,0,1,1,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,
+                         1,0,0,0,0,1,1,1,1,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,0,1,1,
+                         1,1,1,1,0,1,0,1,1,1,0,1,1,0,1,1,0,1,1,1,0,1,0,0,1,0,1,0,0,1,
+                         1,0,0,1,0,0,0,1,0,1,0,0,1,0,0,0,0,0,0,1,1,1,1,0,1,1,1,1,0,1,
+                         1,0,0,0,0,1,0,1,0,1,1,0,1,1,1,1,1,1,1,1,0,0,1,0,0,0,0,0,0,1,
+                         1,1,1,0,0,1,0,1,0,0,0,0,0,1,0,0,0,0,0,1,1,0,1,1,1,1,1,1,1,1,
+                         1,0,0,0,1,1,1,1,0,1,1,1,1,1,1,1,0,1,0,1,0,0,0,0,0,0,1,0,0,1,
+                         1,0,1,0,0,0,0,0,0,1,0,1,0,0,0,1,1,1,0,1,1,1,1,0,1,0,1,0,1,1,
+                         1,0,1,1,0,1,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,2,0,
+                         1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+    };
+
+    int mapa2[18][30] = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+                         1,0,1,0,1,1,1,0,1,1,1,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,
+                         1,0,0,0,0,0,1,0,0,0,1,2,0,1,0,1,1,1,0,1,1,1,0,1,0,1,1,1,0,1,
+                         1,0,1,0,1,1,1,0,1,1,1,1,0,1,0,1,0,0,0,0,0,1,0,1,0,0,0,0,0,1,
+                         1,0,1,0,1,0,0,0,1,0,0,1,0,1,0,1,0,1,1,1,0,1,0,1,1,0,1,1,0,1,
+                         1,1,1,0,1,0,1,0,1,0,1,1,0,1,0,1,0,0,0,1,0,0,0,1,0,0,1,0,0,1,
+                         1,0,0,0,1,0,1,0,0,0,0,0,0,0,0,1,0,1,1,1,1,1,1,1,1,1,1,0,1,1,
+                         1,0,1,0,1,0,1,1,0,1,0,1,0,1,0,1,0,1,0,0,0,0,0,0,0,1,0,0,0,1,
+                         1,0,1,0,1,0,0,1,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,1,0,1,0,1,
+                         1,0,1,1,1,1,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,1,
+                         1,0,0,1,0,0,0,1,1,1,1,1,1,1,0,1,1,0,1,0,0,1,1,1,0,1,1,1,0,1,
+                         1,1,0,1,0,1,1,1,0,0,0,0,0,1,0,1,0,0,1,1,0,1,0,1,0,0,0,1,0,1,
+                         1,0,0,1,0,0,0,0,0,1,1,1,0,1,1,1,1,1,1,0,0,0,0,1,0,1,0,1,0,1,
+                         1,0,1,1,1,1,1,1,1,1,0,1,0,1,1,0,0,0,1,1,1,1,1,1,1,1,0,1,0,1,
+                         1,0,1,0,0,0,0,1,0,0,0,1,0,0,1,1,1,0,1,0,0,0,0,1,0,0,0,1,0,1,
+                         1,0,1,0,1,1,0,1,0,1,0,1,1,0,1,0,0,0,1,0,1,1,0,1,0,1,1,1,0,1,
+                         0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,1,0,0,2,0,
+                         1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+    };
+
+    int mapa3[27][45] = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+                         0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,2,1,
+                         1,1,1,1,1,0,1,0,0,0,1,0,1,1,0,0,0,0,0,1,0,1,1,1,1,1,0,1,1,1,1,0,1,1,1,1,0,1,1,0,1,0,1,1,1,
+                         1,0,0,0,1,0,1,0,1,1,1,1,1,1,1,1,1,1,0,1,1,1,0,0,0,0,0,1,0,0,0,0,1,0,1,0,0,0,1,0,1,0,0,0,1,
+                         1,0,1,0,0,0,1,0,0,0,0,0,0,1,0,1,0,1,0,0,0,0,0,1,1,1,1,1,1,1,1,0,1,0,0,0,1,0,1,0,1,1,1,0,1,
+                         1,0,1,1,1,1,1,0,1,1,0,1,0,1,0,0,0,1,1,1,0,1,1,1,0,0,0,0,1,0,1,0,1,1,1,1,1,0,1,0,0,1,0,0,1,
+                         1,0,1,0,0,0,0,0,0,1,0,1,0,1,0,1,0,0,1,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,
+                         1,0,1,1,0,1,1,1,1,1,0,1,0,1,0,1,1,0,1,0,1,1,1,0,1,0,1,0,1,0,1,0,1,0,1,1,1,1,1,0,1,1,1,0,1,
+                         1,0,0,1,0,1,0,0,0,0,0,1,0,0,0,0,1,1,1,0,0,0,1,1,1,0,1,1,1,0,1,0,1,0,0,0,0,1,0,0,0,0,1,0,1,
+                         1,1,0,1,0,1,0,1,1,1,1,1,1,0,1,0,0,1,1,0,1,0,1,0,0,0,1,0,0,0,1,0,1,1,1,0,1,1,0,1,0,1,1,0,1,
+                         1,0,0,1,3,1,0,0,0,1,0,0,0,0,1,1,0,0,1,0,1,0,1,0,1,0,0,0,1,0,1,0,1,0,0,0,1,0,0,1,0,0,0,0,1,
+                         1,0,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,1,1,0,1,0,1,0,1,1,0,1,1,0,1,1,1,1,1,0,1,1,0,0,0,1,0,0,1,
+                         1,0,1,0,0,0,0,1,0,1,0,0,0,0,0,1,0,0,0,0,1,0,1,0,1,0,0,0,1,0,0,0,0,0,1,0,1,0,0,1,0,1,0,0,1,
+                         1,0,1,1,0,1,0,0,0,1,0,1,0,1,0,1,0,1,1,1,1,1,1,1,1,0,1,0,1,1,1,1,1,0,1,0,0,0,1,1,0,1,1,0,1,
+                         1,0,0,1,0,1,1,1,1,1,0,1,0,1,0,0,0,0,0,0,1,1,0,0,0,0,1,0,0,0,0,0,1,0,1,1,1,0,0,1,0,0,1,0,1,
+                         1,1,0,0,0,1,0,0,0,0,0,1,0,1,0,1,1,1,1,0,0,0,0,1,0,1,1,1,0,1,1,0,0,0,1,0,1,1,0,1,1,0,1,0,1,
+                         1,1,1,1,1,1,0,1,1,1,0,1,0,1,0,0,0,1,1,1,1,0,1,1,0,1,0,0,0,1,1,0,1,1,1,0,0,0,0,1,0,0,0,0,1,
+                         1,0,0,0,0,0,0,1,0,1,1,1,1,1,0,1,0,1,0,0,0,0,1,0,0,1,1,1,0,1,0,0,0,1,1,1,1,1,1,1,0,1,1,1,1,
+                         1,1,0,1,1,1,0,1,0,0,0,0,0,0,0,1,0,0,0,1,1,0,0,0,0,0,0,1,0,1,1,1,0,0,0,0,0,0,1,0,0,1,0,0,1,
+                         1,1,0,1,0,1,1,1,0,1,1,1,1,1,1,1,0,1,1,1,0,0,1,1,1,1,0,1,0,0,1,0,0,1,1,1,1,0,1,1,0,1,1,0,1,
+                         1,0,0,1,0,1,0,1,1,1,0,1,0,1,0,1,0,1,0,1,1,0,0,0,0,1,0,1,0,1,1,1,0,0,1,0,0,0,0,1,0,0,1,0,1,
+                         1,0,1,1,0,1,0,0,0,1,0,1,0,1,0,0,0,1,0,0,0,0,1,1,1,1,0,1,0,0,0,1,1,0,1,0,1,1,1,1,1,0,0,0,1,
+                         1,0,1,0,0,0,0,1,0,0,0,0,0,1,1,1,1,1,0,1,1,0,0,1,0,0,0,1,0,1,0,0,1,0,1,0,0,0,1,0,1,1,1,0,1,
+                         1,0,1,0,1,1,1,1,0,1,1,1,0,0,0,0,0,0,0,0,1,1,0,0,0,1,1,1,1,1,0,0,1,0,1,1,0,1,1,0,0,0,1,0,1,
+                         1,0,1,0,0,0,0,1,0,0,0,1,0,1,1,0,1,0,1,1,1,1,0,1,1,1,0,1,0,0,0,1,1,0,1,1,0,0,1,1,1,0,1,0,1,
+                         1,2,1,1,1,1,0,1,0,1,1,1,0,0,1,0,1,0,1,0,0,0,0,0,0,1,0,0,0,1,1,1,0,0,0,1,1,0,1,0,1,0,0,2,1,
+                         1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,
+    };
+
+    int mapa4[27][45] = {1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+                         1,0,0,0,1,0,0,0,0,0,1,0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,2,1,
+                         1,1,1,0,1,0,1,0,1,0,1,0,1,0,1,0,0,1,1,0,1,0,1,1,1,1,1,0,1,1,1,1,0,0,0,1,1,0,1,1,1,1,1,0,1,
+                         1,0,0,0,1,0,1,0,1,0,1,0,0,0,1,1,0,0,0,0,1,0,1,0,0,0,1,0,0,0,0,1,1,1,0,1,0,0,0,1,0,1,0,0,1,
+                         1,0,1,1,1,1,1,0,1,0,1,1,1,0,0,1,1,1,0,1,1,0,1,0,1,0,1,0,1,1,0,0,0,0,0,1,1,1,1,1,0,1,0,1,1,
+                         1,0,1,0,0,0,1,0,1,0,0,0,1,1,0,1,0,1,0,1,0,0,1,0,1,1,1,0,0,1,1,1,1,1,1,1,0,0,0,1,0,1,0,0,1,
+                         1,0,0,0,1,0,1,0,1,1,1,0,0,0,0,1,0,1,1,1,0,1,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0,1,0,0,0,1,1,0,1,
+                         1,1,1,1,1,0,1,0,1,0,1,1,1,0,0,0,0,0,0,1,0,0,1,0,1,0,0,0,0,1,0,1,0,1,1,1,1,1,1,1,1,1,0,0,1,
+                         1,0,0,1,0,0,1,0,1,0,0,0,1,1,1,1,1,0,1,1,1,0,1,0,1,0,1,0,1,1,0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,
+                         1,0,1,1,0,1,1,0,1,0,1,0,0,0,1,0,1,0,1,0,0,0,0,0,1,0,1,0,0,0,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,
+                         1,0,0,1,0,0,0,0,1,0,1,0,1,0,0,0,1,0,0,0,1,0,1,1,1,1,1,0,1,1,0,1,0,0,0,0,0,1,0,1,0,0,1,0,1,
+                         1,1,0,1,1,1,1,1,1,0,1,0,1,1,1,1,1,0,1,1,1,0,0,0,0,0,0,0,0,1,0,1,0,1,1,0,1,1,0,1,1,0,0,0,1,
+                         1,0,0,1,0,0,0,0,1,0,1,0,0,1,0,0,0,0,0,1,0,0,1,1,1,0,1,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,1,0,1,
+                         1,0,1,1,1,0,1,0,0,0,1,1,0,1,0,1,1,1,0,1,0,1,1,0,1,0,1,0,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,0,1,
+                         1,0,1,0,0,0,1,1,1,1,1,0,0,1,0,0,0,1,0,1,0,1,0,0,1,0,0,0,1,1,0,0,0,0,0,1,0,0,1,0,0,1,0,0,1,
+                         1,0,1,0,1,1,1,0,0,0,1,0,1,1,1,1,0,1,2,1,0,0,0,1,1,0,1,1,1,0,0,1,0,1,0,0,0,1,1,0,1,1,1,0,1,
+                         1,0,1,0,1,0,0,0,1,0,0,0,1,0,0,0,0,1,1,1,0,0,1,1,0,0,0,1,0,0,1,1,1,1,1,0,1,1,0,0,0,0,1,0,1,
+                         1,0,0,0,1,0,1,0,1,1,1,0,1,0,1,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,1,0,0,0,1,0,1,1,0,1,0,1,
+                         1,0,1,0,0,0,1,0,1,0,0,0,1,1,1,0,1,0,1,1,1,0,1,0,1,1,1,0,1,0,1,1,1,1,0,1,0,1,0,1,0,0,0,0,1,
+                         1,0,1,1,1,0,1,0,0,0,1,0,0,0,0,0,1,0,0,1,0,0,0,0,1,0,1,0,1,1,1,0,0,0,0,1,0,1,1,1,1,1,1,0,1,
+                         1,0,1,0,0,0,1,0,1,0,1,0,1,1,1,0,1,1,0,1,0,1,1,1,1,0,1,0,1,0,0,0,1,0,0,1,0,0,0,0,1,0,1,0,1,
+                         1,0,1,0,1,1,1,0,1,0,1,0,1,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,1,0,1,1,1,0,1,1,1,0,1,0,1,0,1,1,1,
+                         1,0,1,0,0,0,1,1,1,0,1,0,1,0,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,0,0,0,0,0,1,1,1,0,1,0,0,0,1,
+                         1,0,1,1,1,0,0,0,0,0,1,0,1,0,0,1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,1,1,1,0,0,0,0,0,1,1,1,0,1,
+                         1,0,0,0,1,0,1,0,1,1,1,0,1,1,0,0,0,1,1,1,1,0,1,0,1,0,1,0,1,1,1,0,1,0,1,1,0,1,0,1,1,0,1,0,1,
+                         1,2,1,0,0,0,1,0,1,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,1,0,1,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,2,1,
+                         1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+
+    };
+
+    int mapa0[27][45] = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+                         0,5,0,0,0,0,1,0,1,0,0,0,0,0,0,1,1,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0,1,
+                         1,1,1,1,1,0,1,0,0,0,1,0,1,1,0,0,0,0,0,1,0,1,1,1,1,1,0,1,1,1,1,0,1,1,1,1,0,1,1,0,1,0,1,1,1,
+                         1,0,0,0,1,0,1,0,1,1,1,1,1,1,1,1,1,1,0,1,1,1,0,0,0,0,0,1,0,0,0,0,1,0,1,0,0,0,1,0,1,0,0,0,1,
+                         1,0,1,0,0,0,1,0,1,0,0,0,0,1,0,1,0,1,0,0,0,0,0,1,1,1,1,1,1,1,1,0,1,0,0,0,1,0,1,0,1,1,1,0,1,
+                         1,0,1,1,1,1,1,0,1,1,0,1,0,1,0,0,0,1,1,1,1,1,1,1,0,0,0,0,1,0,1,0,1,1,1,1,1,0,1,0,0,1,0,0,1,
+                         1,0,1,0,0,0,0,0,0,1,0,1,0,1,0,1,0,0,1,0,0,0,0,0,0,0,1,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,1,
+                         1,0,1,1,0,1,1,1,1,1,0,1,0,1,0,1,1,0,1,0,1,1,1,0,1,0,1,0,1,0,1,0,1,0,1,1,1,1,1,0,1,1,1,0,1,
+                         1,0,0,1,0,1,0,0,0,0,0,1,0,0,0,0,1,1,1,0,0,0,1,1,1,0,1,1,1,0,1,0,1,0,0,0,0,1,0,0,0,0,1,0,1,
+                         1,1,0,1,0,1,0,1,1,1,1,1,1,0,1,0,0,1,1,0,1,0,1,0,0,0,1,0,0,0,1,0,1,1,1,0,1,1,0,1,0,1,1,0,1,
+                         1,0,0,1,0,1,0,0,0,1,0,0,0,0,1,1,0,0,1,0,1,0,1,0,1,0,0,0,1,0,1,0,1,0,0,0,1,0,0,1,0,0,0,0,1,
+                         1,0,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,1,1,0,1,0,1,0,1,1,0,1,1,0,1,1,1,1,1,0,1,1,0,0,0,1,0,0,1,
+                         1,0,0,1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,1,0,0,1,1,1,0,1,1,0,0,0,0,0,0,1,0,0,0,0,0,1,0,1,0,1,
+                         1,0,1,1,1,0,1,1,0,1,1,1,0,1,0,1,1,1,0,1,0,1,1,0,1,0,1,0,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,0,1,
+                         1,0,1,0,0,0,1,1,1,1,1,0,0,1,0,0,0,1,0,1,0,1,0,0,1,0,0,0,1,1,0,1,0,0,0,1,0,0,1,0,0,1,0,0,1,
+                         1,0,1,0,1,1,1,0,1,0,1,0,1,1,1,1,0,1,0,1,0,0,0,1,1,0,1,1,1,0,0,1,0,1,0,0,0,1,1,0,1,1,1,0,1,
+                         1,0,1,0,1,0,0,0,1,0,0,0,1,0,0,0,0,1,1,1,0,0,1,1,0,0,0,1,0,0,1,1,1,1,1,1,1,1,0,0,0,0,1,0,1,
+                         1,0,1,0,1,0,1,0,1,1,1,0,1,0,1,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,1,0,0,0,1,0,1,1,0,1,0,1,
+                         1,0,1,0,0,0,1,1,1,0,0,0,1,1,1,0,1,0,1,1,1,1,1,0,1,1,1,0,1,0,1,1,1,1,0,1,0,1,0,1,0,0,0,0,1,
+                         1,0,1,1,1,0,1,0,0,0,1,0,0,0,1,0,1,0,0,1,0,0,0,0,1,0,1,0,1,1,1,0,0,0,0,1,0,1,1,1,1,1,1,0,1,
+                         1,0,1,0,0,0,1,0,1,0,1,0,1,1,1,0,1,1,0,1,0,1,1,1,1,0,1,0,1,0,0,0,1,0,0,1,0,0,0,0,1,0,1,0,1,
+                         1,0,1,0,1,1,1,0,1,0,1,0,1,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,1,0,1,1,1,0,1,1,1,0,1,0,1,0,1,0,1,
+                         1,0,1,0,0,0,1,1,1,0,1,0,1,0,1,1,1,1,0,1,1,1,1,1,0,1,1,0,1,1,1,0,0,0,0,0,1,1,1,0,1,0,0,0,1,
+                         1,0,1,1,1,0,1,0,0,0,1,0,1,0,0,1,0,0,0,0,0,0,1,0,0,0,1,0,0,0,1,0,1,1,1,0,0,0,0,0,1,1,1,0,1,
+                         1,0,0,0,1,0,1,0,1,1,1,0,1,1,0,0,0,1,1,1,1,0,1,0,1,0,1,0,1,1,1,0,1,0,1,1,0,1,0,1,1,0,1,0,1,
+                         1,0,1,0,0,0,1,0,1,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,1,0,1,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,1,
+                         1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
+    };
+
+    void dibujar_mapa1(){
+    for (int row = 0; row < 18; row++){
+        for (int col = 0; col < 30; col++){
+            if(mapa1 [row][col]== 1){
+                draw_sprite(buffer, roca, col*30, row*30);
+            }
+            if(mapa1 [row][col]== 0){
+                draw_sprite(buffer, suelo, col*30, row*30);
+            }
+            if(mapa1 [row][col] == 2){
+                draw_sprite(buffer, limon, col*30, row*30);
+                if(py/30 == row && px/30 == col){
+                    play_sample(comer,150,150,1000,0);
+                    mapa1[row][col] = ' ';
+                }
+            }
+        }
+    }
+    }
+
+    void dibujar_mapa2(){
+    for (int row = 0; row < 18; row++){
+        for (int col = 0; col < 30; col++){
+            if(mapa2 [row][col]== 1){
+                draw_sprite(buffer, roca, col*30, row*30);
+            }
+            if(mapa2 [row][col]== 0){
+                draw_sprite(buffer, suelo, col*30, row*30);
+            }
+            if(mapa2 [row][col] == 2){
+                draw_sprite(buffer, limon, col*30, row*30);
+                if(pyn2/30 == row && pxn2/30 == col){
+                    play_sample(comer,150,150,1000,0);
+                    mapa2[row][col] = 0;
+                }
+            }
+        }
+    }
+    }
+
+    void dibujar_mapa3(){
+    for (int row = 0; row < 27; row++){
+        for (int col = 0; col < 45; col++){
+            if(mapa3 [row][col]== 1){
+                draw_sprite(buffer, roca20, col*20, row*20);
+            }
+            if(mapa3 [row][col]== 0){
+                draw_sprite(buffer, suelo20, col*20, row*20);
+            }
+            if(mapa3 [row][col] == 2){
+                draw_sprite(buffer, limon20, col*20, row*20);
+                if(py2/20 == row && px2/20 == col){
+                    play_sample(comer,150,150,1000,0);
+                    mapa3[row][col] = 0;
+                }
+            }
+            if(mapa3 [row][col] == 3){
+                draw_sprite(buffer, suelo20, col*20, row*20);
+                if(py2/20 == row && px2/20 == col){
+                    play_sample(Tramp,150,150,1000,0);
+                    mapa3[row][col] = ' ';
+                }
+            }
+        }
+    }
+    }
+
+    void dibujar_mapa4(){
+    for (int row = 0; row < 27; row++){
+        for (int col = 0; col < 45; col++){
+            if(mapa4 [row][col]== 1){
+                draw_sprite(buffer, roca20, col*20, row*20);
+            }
+            if(mapa4 [row][col]== 0){
+                draw_sprite(buffer, suelo20, col*20, row*20);
+            }
+            if(mapa4 [row][col] == 2){
+                draw_sprite(buffer, limon20, col*20, row*20);
+                if(py4/20 == row && px4/20 == col){
+                    play_sample(comer,150,150,1000,0);
+                    mapa4[row][col] = 0;
+                }
+            }
+        }
+    }
+    }
+
+    void dibujar_mapa0(){
+    for (int row = 0; row < 27; row++){
+        for (int col = 0; col < 45; col++){
+            if(mapa0 [row][col]== 1){
+                draw_sprite(buffer, roca20, col*20, row*20);
+            }
+            if(mapa0 [row][col] == 5){
+                draw_sprite(buffer, cuckzi, col*20, row*20);
+                if(py2/20 == row && px2/20 == col){
+                    play_sample(comer,150,150,1000,0);
+                    mapa0[row][col] = ' ';
+                }
+            }
+        }
+    }
+    }
+
+
+    void pantalla(){
+    blit(buffer, screen, 0,0,0,0, 900, 600);
+    }
+
+    void dibujar_personaje1(){
+    draw_sprite(buffer,neco, px, py);//Estrablece el respawn
+    }
+    void dibujar_personaje2(){
+    draw_sprite(buffer,neco, pxn2, pyn2);//Estrablece el respawn
+    }
+    void dibujar_personaje3(){
+    draw_sprite(buffer,neco20, px2, py2); //Estrablece el respawn
+    }
+    void dibujar_personaje4(){
+    draw_sprite(buffer,neco20, px4, py4); //Estrablece el respawn
+    }
+
+    void N1(){
+        draw_sprite(buffer,N1M1, N1X, N1Y);
+    }
+    void N2(){
+        draw_sprite(buffer,N2M1, N1X, N1Y);
+    }
+    void N3(){
+        draw_sprite(buffer,N3M1, N1X, N1Y);
+    }
+    void N4(){
+        draw_sprite(buffer,N4M1, N1X, N1Y);
+    }
+    void N0(){
+        draw_sprite(buffer,N0M0, N1X, N1Y);
+    }
+
+
+    bool nivel1(){
+        for (int row = 0; row < 18; row++){
+                for (int col = 0; col < 30; col++){
+                    if(mapa1 [row][col] == 2) return true;
+                    numero_de_nivel = 2;
+                }
+        }
+        return false;
+    }
+    bool nivel2(){
+        for (int row = 0; row < 18; row++){
+                for (int col = 0; col < 30; col++){
+                    if(mapa2 [row][col] == 2)return true;
+                    numero_de_nivel = 3;
+                }
+        }
+        return false;
+    }
+    bool nivel3(){
+        for (int row = 0; row < 27; row++){
+                for (int col = 0; col < 45; col++){
+                    if(mapa3 [row][col] == 2)return true;
+                    numero_de_nivel = 4;
+                    }
+                }
+    return false;
+    }
+    bool nivel3_5(){
+        for (int row = 0; row < 27; row++){
+                for (int col = 0; col < 45; col++){
+                    if(mapa3 [row][col] == 3)return true;
+                    numero_de_nivel = 5;
+                    }
+                }
+    return false;
+    }
+    bool nivel4(){
+        for (int row = 0; row < 27; row++){
+                for (int col = 0; col < 45; col++){
+                    if(mapa4 [row][col] == 2)return true;
+                    fin = 1;
+                }
+        }
+        return false;
+    }
+    bool nivel0(){
+        for (int row = 0; row < 27; row++){
+                for (int col = 0; col < 45; col++){
+                    if(mapa0 [row][col] == 5)return true;
+                    fin = 2;
+                }
+        }
+        return false;
+    }
+
+
+    void controles1(){//sistema de fisica y controles
+        if(key[KEY_RIGHT]) dir = 1;{
+                if (dir == 1){
+                        if(mapa1[py/30][(px+30)/30]!= 1)
+                        px +=30;
+                        else dir = 5;
+                        }
+                dir=4;
+        }
+
+        if(key[KEY_LEFT]) dir = 0;{
+                if (dir == 0){
+                        if(mapa1[py/30][(px-30)/30]!= 1)
+                        px -=30;
+                        else dir = 5;
+                        }
+                dir=4;
+        }
+
+        if(key[KEY_UP]) dir = 2;{
+            if (dir == 2){
+                if(mapa1[(py-30)/30][px/30]!= 1)
+                py -=30;
+                else dir = 5;
+        }
+            dir=4;
+        }
+
+        if(key[KEY_DOWN]) dir = 3;{
+            if (dir == 3){
+                    if(mapa1[(py+30)/30][px/30]!= 1)
+                    py +=30;
+                    else dir = 5;
+        }
+            dir=4;
+        }
+    }
+    void controles2(){
+        if(key[KEY_RIGHT]) dir = 1;{
+                if (dir == 1){
+                        if(mapa2[pyn2/30][(pxn2+30)/30]!= 1)
+                        pxn2 +=30;
+                        else dir = 5;
+                        }
+                dir=4;
+        }
+
+        if(key[KEY_LEFT]) dir = 0;{
+                if (dir == 0){
+                        if(mapa2[pyn2/30][(pxn2-30)/30]!= 1)
+                        pxn2 -=30;
+                        else dir = 5;
+                        }
+                dir=4;
+        }
+
+        if(key[KEY_UP]) dir = 2;{
+            if (dir == 2){
+                if(mapa2[(pyn2-30)/30][pxn2/30]!= 1)
+                pyn2 -=30;
+                else dir = 5;
+        }
+            dir=4;
+        }
+
+        if(key[KEY_DOWN]) dir = 3;{
+            if (dir == 3){
+                    if(mapa2[(pyn2+30)/30][pxn2/30]!= 1)
+                    pyn2 +=30;
+                    else dir = 5;
+        }
+            dir=4;
+        }
+    }
+    void controles3(){
+        if(key[KEY_RIGHT]) dir = 1;{
+                if (dir == 1){
+                        if(mapa3[py2/20][(px2+20)/20]!= 1)
+                        px2 +=20;
+                        else dir = 5;
+                        }
+                dir=4;
+        }
+
+        if(key[KEY_LEFT]) dir = 0;{
+                if (dir == 0){
+                        if(mapa3[py2/20][(px2-20)/20]!= 1)
+                        px2 -=20;
+                        else dir = 5;
+                        }
+                dir=4;
+        }
+
+        if(key[KEY_UP]) dir = 2;{
+            if (dir == 2){
+                if(mapa3[(py2-20)/20][px2/20]!= 1)
+                py2 -=20;
+                else dir = 5;
+        }
+            dir=4;
+        }
+
+        if(key[KEY_DOWN]) dir = 3;{
+            if (dir == 3){
+                    if(mapa3[(py2+20)/20][px2/20]!= 1)
+                    py2 +=20;
+                    else dir = 5;
+        }
+            dir=4;
+        }
+
+    }
+    void controles4(){
+        if(key[KEY_RIGHT]) dir = 1;{
+                if (dir == 1){
+                        if(mapa4[py4/20][(px4+20)/20]!= 1)
+                        px4 +=20;
+                        else dir = 5;
+                        }
+                dir=4;
+        }
+
+        if(key[KEY_LEFT]) dir = 0;{
+                if (dir == 0){
+                        if(mapa4[py4/20][(px4-20)/20]!= 1)
+                        px4 -=20;
+                        else dir = 5;
+                        }
+                dir=4;
+        }
+
+        if(key[KEY_UP]) dir = 2;{
+            if (dir == 2){
+                if(mapa4[(py4-20)/20][px4/20]!= 1)
+                py4 -=20;
+                else dir = 5;
+        }
+            dir=4;
+        }
+
+        if(key[KEY_DOWN]) dir = 3;{
+            if (dir == 3){
+                    if(mapa4[(py4+20)/20][px4/20]!= 1)
+                    py4 +=20;
+                    else dir = 5;
+        }
+            dir=4;
+        }
+
+    }
+    void controles0(){
+        if(key[KEY_RIGHT]) dir = 1;{
+                if (dir == 1){
+                        if(mapa0[py2/20][(px2+20)/20]!= 1)
+                        px2 +=20;
+                        else dir = 5;
+                        }
+                dir=4;
+        }
+
+        if(key[KEY_LEFT]) dir = 0;{
+                if (dir == 0){
+                        if(mapa0[py2/20][(px2-20)/20]!= 1)
+                        px2 -=20;
+                        else dir = 5;
+                        }
+                dir=4;
+        }
+
+        if(key[KEY_UP]) dir = 2;{
+            if (dir == 2){
+                if(mapa0[(py2-20)/20][px2/20]!= 1)
+                py2 -=20;
+                else dir = 5;
+        }
+            dir=4;
+        }
+
+        if(key[KEY_DOWN]) dir = 3;{
+            if (dir == 3){
+                    if(mapa0[(py2+20)/20][px2/20]!= 1)
+                    py2 +=20;
+                    else dir = 5;
+        }
+            dir=4;
+        }
+
+    }
+int main()
+{
+    allegro_init(); //Inicializa el entorno de allegro
+    install_keyboard(); //Permite el uso de teclas dentro del programa
+    install_mouse(); //Permite el uso del cursor
+    set_color_depth(32); //Establece el formato en 32 bits
+    set_gfx_mode(GFX_AUTODETECT_WINDOWED, 900, 600, 0, 0); //Define el tamaño de la pantalla del juego
+
+    if (install_sound(DIGI_AUTODETECT, MIDI_AUTODETECT, NULL) != 0) {
+       allegro_message("Error: inicializando sistema de sonido\n%s\n", allegro_error);
+       return 1;
+    }
+    set_volume(100, 100);
+
+    buffer = create_bitmap(900,600); //Permite pegar la estampa principal y armar el esecenario del juego
+    roca = load_bitmap("roca.bmp",NULL);
+    neco = load_bitmap("neco.bmp",NULL);
+    limon = load_bitmap("limon.bmp",NULL);
+    Menu = load_bitmap("Menu.bmp",NULL);
+    MenuC = load_bitmap("MenuC.bmp",NULL);
+    MenuS = load_bitmap("MenuS.bmp",NULL);
+    cursor = load_bitmap("cursor.bmp",NULL);
+    MenuCre = load_bitmap("MenuCreditos.bmp",NULL);
+    Creditos = load_bitmap("Creditos.bmp",NULL);
+    CreditosA = load_bitmap("CreditosA.bmp",NULL);
+    MusicaJuego = load_wav("MusicaM.wav");
+    MusicaMenu = load_wav("MusicaJ.wav");
+    comer = load_wav("Comer.wav");
+    neco20 = load_bitmap("Neco20.bmp",NULL);
+    roca20 = load_bitmap("roca20.bmp",NULL);
+    limon20 = load_bitmap("Limon20.bmp",NULL);
+    Inst = load_bitmap("Instrucciones.bmp",NULL);
+    InstJ = load_bitmap("InstruccionesJ.bmp",NULL);
+    suelo = load_bitmap("Suelo.bmp",NULL);
+    suelo20 = load_bitmap("Suelo20.bmp",NULL);
+    N1M1 = load_bitmap("N1M1.bmp",NULL);
+    N2M1 = load_bitmap("N2M1.bmp",NULL);
+    N3M1 = load_bitmap("N3M1.bmp",NULL);
+    N4M1 = load_bitmap("N4M1.bmp",NULL);
+    N0M0 = load_bitmap("N0M0.bmp",NULL);
+    lava = load_bitmap("Lava.bmp",NULL);
+    FMP1 = load_bitmap("FMP1.bmp",NULL);
+    FMP2 = load_bitmap("FMP2.bmp",NULL);
+    FMP3 = load_bitmap("FMP3.bmp",NULL);
+    cuckzi = load_bitmap("Cuckzi.bmp",NULL);
+    FBP1 = load_bitmap("FBP1.bmp",NULL);
+    FBP2 = load_bitmap("FBP2.bmp",NULL);
+    FBP3 = load_bitmap("FBP3.bmp",NULL);
+    Boss = load_wav("Boss-fight.wav");
+    CFB = load_wav("CancionFB.wav");
+    CFM = load_wav("CancionFM.wav");
+    Tramp = load_wav("Trampilla.wav");
+
+    int salida = 1;//menu
+
+    play_sample(MusicaMenu,100,100,1000,1);
+    while(salida == 1){
+            if(mouse_x > 250 && mouse_x < 490 && mouse_y > 290 && mouse_y < 355){
+                    blit(MenuC,buffer, 0,0,0,0, 900, 600);
+                if(mouse_b & 1){
+                    salida = 5;
+                }
+            }
+            else if(mouse_x > 250 && mouse_x < 380 && mouse_y > 405 && mouse_y < 455){
+                    blit(MenuS,buffer,0,0,0,0, 900, 600);
+                if(mouse_b & 1){
+                    salida = 3;
+                }
+            }
+            else if(mouse_x > 780 && mouse_x < 890 && mouse_y > 10 && mouse_y < 45){
+                    blit(MenuCre,buffer,0,0,0,0, 900, 600);
+                if(mouse_b & 1){
+                    salida = 4;
+                }
+            }
+            else blit(Menu,buffer,0,0,0,0, 900, 600);
+
+            masked_blit(cursor,buffer,0,0,mouse_x,mouse_y,15,22);
+            blit(buffer,screen,0,0,0,0, 900, 600);
+
+        while(salida == 4){//Creditos
+        if(mouse_x > 20 && mouse_x < 140 && mouse_y > 540 && mouse_y < 575){
+                blit(CreditosA,buffer, 0,0,0,0, 900, 600);
+                if(mouse_b & 1){
+                    salida = 1;
+                }
+            }
+        else blit(Creditos,buffer,0,0,0,0, 900, 600);
+
+        masked_blit(cursor,buffer,0,0,mouse_x,mouse_y,15,22);
+        blit(buffer,screen,0,0,0,0, 900, 600);
+        }
+        while(salida == 5){//Instrucciones
+        if(mouse_x > 750 && mouse_x < 880 && mouse_y > 550 && mouse_y < 590){
+                blit(InstJ,buffer, 0,0,0,0, 900, 600);
+                if(mouse_b & 1){
+                    salida = 2;
+                }
+            }
+        else blit(Inst,buffer,0,0,0,0, 900, 600);
+
+        masked_blit(cursor,buffer,0,0,mouse_x,mouse_y,15,22);
+        blit(buffer,screen,0,0,0,0, 900, 600);
+        }
+    }
+
+
+
+    play_sample(MusicaJuego,60,100,1000,1);
+    if(numero_de_nivel == 1){
+    while(!key[KEY_ESC] && nivel1() && salida == 2) //Sistema de cerrado del juego
+    {
+        //Sistema del nivel
+        stop_sample(MusicaMenu);
+
+        controles1();
+        clear(buffer);
+        dibujar_mapa1();
+        N1();
+        dibujar_personaje1();
+        pantalla();
+        rest(90);
+    }
+    }
+    if(numero_de_nivel == 2){
+        while(!key[KEY_ENTER] && nivel2() && salida == 2 && !key[KEY_ESC]){
+            textout_centre_ex(screen, font, "Nivel 2: Presiona (ENTER) para empezar", 450, 250, 0xffffff, 0x000000);
+            rest(20);
+        }
+    while(!key[KEY_ESC] && nivel2() && salida == 2) //Sistema de cerrado del juego
+    {
+
+        controles2();
+        clear(buffer);
+        N2();
+        dibujar_mapa2();
+        dibujar_personaje2();
+        pantalla();
+        rest(90);
+    }
+    }
+    if(numero_de_nivel == 3){
+        while(!key[KEY_ENTER] && nivel3() && nivel3_5() && salida == 2 && !key[KEY_ESC]){
+            textout_centre_ex(screen, font, "Nivel 3: Presiona (ENTER) para empezar", 450, 250, 0xffffff, 0x000000);
+            rest(20);
+        }
+    while(!key[KEY_ESC] && nivel3() && salida == 2 && nivel3_5()) //Sistema de cerrado del juego
+    {
+        controles3();
+        clear(buffer);
+        dibujar_mapa3();
+        N3();
+        dibujar_personaje3();
+        pantalla();
+        rest(90);
+    }
+    }
+    if(numero_de_nivel == 5 ){
+        while(!key[KEY_ENTER] && nivel0() & salida == 2 && !key[KEY_ESC]){
+            textout_centre_ex(screen, font, "Nivel /?$%#: Acabas de caer por una trampilla secetra presiona (ENTER)", 450, 250, 0xffffff, 0x000000);
+            rest(20);
+        }
+        play_sample(Boss,70,100,1000,1);
+    while(!key[KEY_ESC] && nivel0() && salida == 2) //Sistema de cerrado del juego
+    {
+        stop_sample(MusicaJuego);
+        controles0();
+        clear(buffer);
+        dibujar_mapa0();
+        N0();
+        dibujar_personaje3();
+        pantalla();
+        rest(90);
+    }
+    }
+    if(numero_de_nivel == 4){
+        while(!key[KEY_ENTER] && nivel4() && salida == 2 && !key[KEY_ESC]){
+            textout_centre_ex(screen, font, "Nivel 4: Presiona (ENTER) para empezar", 450, 250, 0xffffff, 0x000000);
+            rest(20);
+        }
+    while(!key[KEY_ESC] && nivel4() && salida == 2) //Sistema de cerrado del juego
+    {
+        controles4();
+        clear(buffer);
+        dibujar_mapa4();
+        N4();
+        dibujar_personaje4();
+        pantalla();
+        rest(90);
+    }
+    }
+
+    if(fin == 1){//Final Malo
+        stop_sample(MusicaJuego);
+        play_sample(CFM,60,100,1000,1);
+        while(!key[KEY_ESC] && salida == 2 && avanzar_pagina == 1){
+            draw_sprite(buffer,FMP1, x, y);
+            pantalla();
+            if(key[KEY_ENTER]){
+            avanzar_pagina = 2;
+            }
+        }
+            while(!key[KEY_ESC] && salida == 2 && avanzar_pagina == 2){
+            draw_sprite(buffer,FMP2, x, y);
+            pantalla();
+            while(!key[KEY_ENTER]){
+            avanzar_pagina = 3;
+            }
+        }
+        while(!key[KEY_ESC] && salida == 2 && avanzar_pagina == 3){
+            draw_sprite(buffer,FMP3, x, y);
+            pantalla();
+            if(key[KEY_ESC]){
+            avanzar_pagina = 4;
+            }
+        }
+    }
+
+    if(fin == 2){//Final bueno
+        stop_sample(MusicaJuego);
+        stop_sample(Boss);
+        play_sample(CFB,60,100,1000,1);
+        while(!key[KEY_ESC] && salida == 2 && avanzar_pagina == 1){
+            draw_sprite(buffer,FBP1, x, y);
+            pantalla();
+            if(key[KEY_ENTER]){
+            avanzar_pagina = 2;
+            }
+        }
+            while(!key[KEY_ESC] && salida == 2 && avanzar_pagina == 2){
+            draw_sprite(buffer,FBP2, x, y);
+            pantalla();
+            while(!key[KEY_ENTER]){
+            avanzar_pagina = 3;
+            }
+        }
+        while(!key[KEY_ESC] && salida == 2 && avanzar_pagina == 3){
+            draw_sprite(buffer,FBP3, x, y);
+            pantalla();
+            if(key[KEY_ESC]){
+            avanzar_pagina = 4;
+            }
+        }
+    }
+
+    return 0;
+    system("pause");
+}
+END_OF_MAIN();
